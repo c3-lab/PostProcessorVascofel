@@ -5,17 +5,28 @@
  */
 package postprocessorvascofel;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.SwingWorker;
+
 /**
  *
  * @author asafe
  */
 public class PostProcessorFrame extends javax.swing.JFrame {
+    
+    FileProcessor fileProcessor;
 
     /**
      * Creates new form PostProcessorFrame
      */
     public PostProcessorFrame() {
         initComponents();
+        
+        fileProcessor = new FileProcessor();
     }
 
     /**
@@ -27,21 +38,94 @@ public class PostProcessorFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonLoadFile = new javax.swing.JButton();
+        buttonSaveFile = new javax.swing.JButton();
+        progressBar = new javax.swing.JProgressBar();
+        textFieldFilePath = new javax.swing.JTextField();
+        textFieldNewFileName = new javax.swing.JTextField();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        buttonLoadFile.setText("Caregar Arquivo");
+        buttonLoadFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonLoadFileActionPerformed(evt);
+            }
+        });
+
+        buttonSaveFile.setText("Salvar arquivo");
+        buttonSaveFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSaveFileActionPerformed(evt);
+            }
+        });
+
+        progressBar.setStringPainted(true);
+
+        textFieldFilePath.setEditable(false);
+
+        textFieldNewFileName.setToolTipText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(buttonLoadFile)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textFieldFilePath))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(31, 31, 31)
+                                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 208, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(textFieldNewFileName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(buttonSaveFile)
+                        .addGap(21, 21, 21))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonLoadFile)
+                    .addComponent(textFieldFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textFieldNewFileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonSaveFile))
+                .addGap(19, 19, 19)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(134, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void buttonLoadFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoadFileActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(this);
+        if(result == JFileChooser.APPROVE_OPTION){
+            fileProcessor.loadFile(fileChooser.getSelectedFile());
+            textFieldFilePath.setText(fileChooser.getSelectedFile().getPath());
+        }
+    }//GEN-LAST:event_buttonLoadFileActionPerformed
+
+    private void buttonSaveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveFileActionPerformed
+       
+        try {
+            fileProcessor.processFile(textFieldNewFileName.getText());
+        } catch (IOException ex) {
+            Logger.getLogger(PostProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_buttonSaveFileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +163,10 @@ public class PostProcessorFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonLoadFile;
+    private javax.swing.JButton buttonSaveFile;
+    private javax.swing.JProgressBar progressBar;
+    private javax.swing.JTextField textFieldFilePath;
+    private javax.swing.JTextField textFieldNewFileName;
     // End of variables declaration//GEN-END:variables
 }
