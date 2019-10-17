@@ -40,6 +40,19 @@ public class FileProcessor{
         reader = new BufferedReader(new FileReader(filePath + File.separator + fileName));
         writer = new BufferedWriter(new FileWriter(filePath + File.separator + newFileName + "." + fileExtension));
 
+        String line;
+        int counter = 0;
+        while((line = reader.readLine()) != null){
+            boolean containsCode = line.toUpperCase().contains("M03");
+            if (containsCode) {
+                counter++;
+
+                if(counter > 1)
+                    line = line.concat("\nG04 P200\nM05\nM03");
+            }
+            writer.write(line + "\n");
+        }
+
         reader.close();
         writer.close();        
     }
