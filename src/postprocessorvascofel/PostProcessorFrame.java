@@ -19,6 +19,7 @@ import javax.swing.SwingWorker;
 public class PostProcessorFrame extends javax.swing.JFrame {
     
     FileProcessor fileProcessor;
+    SwingWorker task;
 
     /**
      * Creates new form PostProcessorFrame
@@ -119,12 +120,33 @@ public class PostProcessorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonLoadFileActionPerformed
 
     private void buttonSaveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveFileActionPerformed
-       
+                
+        buttonSaveFile.setEnabled(false);
+        buttonLoadFile.setEnabled(false);
+        
         try {
             fileProcessor.processFile(textFieldNewFileName.getText());
         } catch (IOException ex) {
             Logger.getLogger(PostProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        task = new SwingWorker(){
+            @Override
+            protected Object doInBackground() throws Exception {
+                for (int i = 0; i <= 100; i++) {
+                    try {
+                        progressBar.setValue(i);
+                        Thread.sleep(20);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                buttonSaveFile.setEnabled(true);
+                buttonLoadFile.setEnabled(true);
+                return null;
+            }
+        };
+        task.execute();
     }//GEN-LAST:event_buttonSaveFileActionPerformed
 
     /**
