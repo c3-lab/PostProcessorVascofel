@@ -56,7 +56,7 @@ public class PostProcessorFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Pós processador Vascofel");
+        setTitle("Pós-processador Vascofel");
         setResizable(false);
 
         buttonLoadFile.setText("Carregar Arquivo");
@@ -135,6 +135,7 @@ public class PostProcessorFrame extends javax.swing.JFrame {
             textFieldFilePath.setText(fileChooser.getSelectedFile().getPath());
             
             buttonSaveFile.setEnabled(true);
+            progressBar.setValue(0);
         }
     }//GEN-LAST:event_buttonLoadFileActionPerformed
 
