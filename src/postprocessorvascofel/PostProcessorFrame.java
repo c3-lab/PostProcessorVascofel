@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -26,6 +27,8 @@ public class PostProcessorFrame extends javax.swing.JFrame {
      */
     public PostProcessorFrame() {
         initComponents();
+        
+        buttonSaveFile.setEnabled(false);
         
         fileProcessor = new FileProcessor();
     }
@@ -116,37 +119,59 @@ public class PostProcessorFrame extends javax.swing.JFrame {
         if(result == JFileChooser.APPROVE_OPTION){
             fileProcessor.loadFile(fileChooser.getSelectedFile());
             textFieldFilePath.setText(fileChooser.getSelectedFile().getPath());
+            
+            buttonSaveFile.setEnabled(true);
         }
     }//GEN-LAST:event_buttonLoadFileActionPerformed
 
     private void buttonSaveFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveFileActionPerformed
-                
-        buttonSaveFile.setEnabled(false);
-        buttonLoadFile.setEnabled(false);
         
+        if (textFieldNewFileName.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Adicione um nome para o novo arquivo!",
+                "",
+                JOptionPane.WARNING_MESSAGE);
+            
+            return;
+        }else if(textFieldNewFileName.getText().contains(".")){
+            JOptionPane.showMessageDialog(this,
+                "Não é necessário adicionar a extensão do arquivo!",
+                "",
+                JOptionPane.WARNING_MESSAGE);
+            
+            return;
+        }
+
         try {
             fileProcessor.processFile(textFieldNewFileName.getText());
-        } catch (IOException ex) {
-            Logger.getLogger(PostProcessorFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        task = new SwingWorker(){
-            @Override
-            protected Object doInBackground() throws Exception {
-                for (int i = 0; i <= 100; i++) {
-                    try {
-                        progressBar.setValue(i);
-                        Thread.sleep(20);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
+            
+            task = new SwingWorker(){
+                @Override
+                protected Object doInBackground() throws Exception {
+                    for (int i = 0; i <= 100; i++) {
+                        try {
+                            progressBar.setValue(i);
+                            Thread.sleep(20);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
                     }
+                    buttonSaveFile.setEnabled(true);
+                    buttonLoadFile.setEnabled(true);
+                    return null;
                 }
-                buttonSaveFile.setEnabled(true);
-                buttonLoadFile.setEnabled(true);
-                return null;
-            }
-        };
-        task.execute();
+            };
+            
+            buttonSaveFile.setEnabled(false);
+            buttonLoadFile.setEnabled(false);
+            task.execute();
+            
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Arquivo Inválido!",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_buttonSaveFileActionPerformed
 
     /**
