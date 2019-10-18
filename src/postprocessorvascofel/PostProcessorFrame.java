@@ -5,8 +5,9 @@
  */
 package postprocessorvascofel;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -47,10 +48,15 @@ public class PostProcessorFrame extends javax.swing.JFrame {
         progressBar = new javax.swing.JProgressBar();
         textFieldFilePath = new javax.swing.JTextField();
         textFieldNewFileName = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Pós processador Vascofel");
+        setLocationByPlatform(true);
+        setResizable(false);
 
-        buttonLoadFile.setText("Caregar Arquivo");
+        buttonLoadFile.setText("Carregar Arquivo");
         buttonLoadFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonLoadFileActionPerformed(evt);
@@ -70,6 +76,10 @@ public class PostProcessorFrame extends javax.swing.JFrame {
 
         textFieldNewFileName.setToolTipText("");
 
+        jLabel1.setText("Caminho do arquivo");
+
+        jLabel2.setText("Nome do novo arquivo");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -77,40 +87,41 @@ public class PostProcessorFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonLoadFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(buttonLoadFile)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(textFieldFilePath))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(31, 31, 31)
-                                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 208, Short.MAX_VALUE)))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(textFieldNewFileName)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(buttonSaveFile)
-                        .addGap(21, 21, 21))))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textFieldFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                            .addComponent(textFieldNewFileName)))
+                    .addComponent(buttonSaveFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonLoadFile)
-                    .addComponent(textFieldFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addComponent(buttonLoadFile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textFieldFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textFieldNewFileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonSaveFile))
-                .addGap(19, 19, 19)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonSaveFile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonLoadFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoadFileActionPerformed
@@ -165,6 +176,21 @@ public class PostProcessorFrame extends javax.swing.JFrame {
                     }
                     buttonSaveFile.setEnabled(true);
                     buttonLoadFile.setEnabled(true);
+                    
+                    Object[] options = {"Sim", "Não"};
+                    int result = JOptionPane.showOptionDialog(PostProcessorFrame.this,
+                        "Você deseja abrir a pasta do arquivo?",
+                        "Arquivo criado com sucesso",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,     //do not use a custom Icon
+                        options,  //the titles of buttons
+                        options[0]); //default button title
+                    
+                    if(result == JOptionPane.OK_OPTION){
+                        Desktop.getDesktop().open(new File(fileProcessor.getFilePath()));
+                    }
+                    
                     return null;
                 }
             };
@@ -217,6 +243,8 @@ public class PostProcessorFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonLoadFile;
     private javax.swing.JButton buttonSaveFile;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JTextField textFieldFilePath;
     private javax.swing.JTextField textFieldNewFileName;

@@ -59,4 +59,16 @@ public class FileProcessor{
         writer.close();        
     }
     
+    public String getFileName() {
+        return fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public String getFileExtension() {
+        return fileExtension;
+    }
+    
 }
