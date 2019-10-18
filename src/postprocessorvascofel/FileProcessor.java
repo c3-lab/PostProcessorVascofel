@@ -24,6 +24,8 @@ public class FileProcessor{
     private BufferedReader reader;
     private BufferedWriter writer;
     
+    private final String COMMAND_TO_SEARCH = "M03";
+    private final String COMMAND_TO_ADD = "\nG04 P200\nM05\nM03";
     
     public void loadFile(File file){
         filePath = file.getParent();
@@ -43,12 +45,12 @@ public class FileProcessor{
         String line;
         int counter = 0;
         while((line = reader.readLine()) != null){
-            boolean containsCode = line.toUpperCase().contains("M03");
+            boolean containsCode = line.toUpperCase().contains(COMMAND_TO_SEARCH);
             if (containsCode) {
                 counter++;
 
                 if(counter > 1)
-                    line = line.concat("\nG04 P200\nM05\nM03");
+                    line = line.concat(COMMAND_TO_ADD);
             }
             writer.write(line + "\n");
         }

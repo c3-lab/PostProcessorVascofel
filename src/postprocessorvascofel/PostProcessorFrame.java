@@ -5,10 +5,8 @@
  */
 package postprocessorvascofel;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Arrays;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -21,6 +19,8 @@ public class PostProcessorFrame extends javax.swing.JFrame {
     
     FileProcessor fileProcessor;
     SwingWorker task;
+
+    final String[] invalidCharacters = {".", ",", "\\", "/", "|", "<", ">", "*", ":", ";","\"", "´", "`","?", "!", "@", "#", "$", "%", "^"};
 
     /**
      * Creates new form PostProcessorFrame
@@ -97,11 +97,11 @@ public class PostProcessorFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(51, 51, 51)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonLoadFile)
                     .addComponent(textFieldFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textFieldNewFileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSaveFile))
@@ -133,15 +133,22 @@ public class PostProcessorFrame extends javax.swing.JFrame {
                 JOptionPane.WARNING_MESSAGE);
             
             return;
-        }else if(textFieldNewFileName.getText().contains(".")){
-            JOptionPane.showMessageDialog(this,
-                "Não é necessário adicionar a extensão do arquivo!",
-                "",
-                JOptionPane.WARNING_MESSAGE);
-            
-            return;
+        }else{
+            for (String invalidCharacter : invalidCharacters) {
+                boolean containsInvalidChar = textFieldNewFileName.getText().contains(invalidCharacter);
+                if (containsInvalidChar) {
+                    JOptionPane.showMessageDialog(this,
+                            "Os nomes de arquivo não podem conter quaisqer\n"
+                                    + "dos seguintes caracteres: "
+                                    + String.join("", invalidCharacters),
+                            "Nome de arquivo inválido",
+                            JOptionPane.WARNING_MESSAGE);
+                    
+                    return;
+                }
+            }
         }
-
+        
         try {
             fileProcessor.processFile(textFieldNewFileName.getText());
             
@@ -202,10 +209,8 @@ public class PostProcessorFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PostProcessorFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new PostProcessorFrame().setVisible(true);
         });
     }
 
